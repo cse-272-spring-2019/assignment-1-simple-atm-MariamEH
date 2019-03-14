@@ -11,7 +11,8 @@ public class SecondScreen {
     Stage stage;
     Scene scene;
     ATMForm atmForm;
-    int index=0; ;
+    int index=0;
+    int count = 0;
     Logic logicalOperations = new Logic(0.0);
     Transaction transaction = new Transaction();
 
@@ -25,12 +26,14 @@ public class SecondScreen {
         Button balanceInquiry  = new Button("Balance Inquiry");
         Button previous = new Button("Previous");
         Button next = new Button("Next");
+        Button logout = new Button("Logout");
         Label enter = new Label("Enter amount");
         TextField amount = new TextField();
         Label text = new Label();
         Label trans = new Label();
         Label empty = new Label();
         Label empty2 = new Label();
+        Label empty3 = new Label();
         grid.add(deposit,0,0);
         grid.add(balanceInquiry,1,0);
         grid.add(withdraw,2,0);
@@ -42,14 +45,27 @@ public class SecondScreen {
         grid.add(previous,0,5);
         grid.add(next,2,5);
         grid.add(trans,1,6);
+        grid.add(empty3,1,7);
+        logout.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                    stage.setScene(atmForm.getScene());
+
+            }
+        });
         previous.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 text.setVisible(false);
-                if (index==0)
-                    stage.setScene(atmForm.getScene());
-                index--;
-                trans.setText("Previous transaction was " +transaction.getlastTransactionType(index)+transaction.getlastTransactionAmount(index));
+                    if (index==0)
+                        trans.setText("End of previous transaction  " );
+                    if(count<5) {
+                        index--;
+                        count++;
+                        trans.setText("Previous transaction was " + transaction.getlastTransactionType(index) + transaction.getlastTransactionAmount(index));
+                    }
+
+
             }
         });
         deposit.setOnAction(new EventHandler<ActionEvent>() {
@@ -68,6 +84,7 @@ public class SecondScreen {
                 transaction.setlastTransactionType(index,"Deposit:");
                 transaction.setlastTransactionAmount(index,logicalOperations.getDeposit());
                 index++;
+                count=0;
                 amount.clear();
             }
         });
@@ -88,6 +105,7 @@ public class SecondScreen {
                 transaction.setlastTransactionType(index,"Withdraw:");
                 transaction.setlastTransactionAmount(index,logicalOperations.getWithdraw());
                 index++;
+                count=0;
                 amount.clear();
             }
         });
@@ -99,6 +117,7 @@ public class SecondScreen {
                 transaction.setlastTransactionType(index,"Balance:");
                 transaction.setlastTransactionAmount(index,logicalOperations.getBalance());
                 index++;
+                count=0;
             }
         });
         next.setOnAction(new EventHandler<ActionEvent>() {
